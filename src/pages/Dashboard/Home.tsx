@@ -1,50 +1,87 @@
 // pages/Dashboard/Home.tsx
 import PageMeta from "../../components/common/PageMeta";
 
+// Imported assets (from /public/images)
+import Logo from "../../../public/images/Logo.jpg";
+import GroupPhoto from "../../../public/images/groupPhoto.jpg";
+import GroupPhoto2 from "../../../public/images/groupPhoto2.jpg";
+import SergeTshirt from "../../../public/images/SergeTshirt.jpg";
+import WheelChair from "../../../public/images/wheelChair.jpg";
+import PainIntoPower from "../../../public/images/painIntoPower.jpg";
+
 const STRIPE_DONATE_URL = "https://your-stripe-checkout-link"; // ← paste your Stripe link
 
+// --- Helper to normalize image size ---
+type ImageRatio = "square" | "4/3" | "16/9" | "21/9";
+const FramedImage: React.FC<{
+  src: string;
+  alt: string;
+  ratio?: ImageRatio;       // default 4:3 across the site
+  contain?: boolean;        // set true if you prefer letterboxing instead of cropping
+  className?: string;
+  imgClassName?: string;    // optional per-image object-position adjustments
+  eager?: boolean;
+}> = ({
+  src,
+  alt,
+  ratio = "4/3",
+  contain = false,
+  className = "",
+  imgClassName = "",
+  eager = false,
+}) => {
+  const ratioClass =
+    ratio === "square"
+      ? "aspect-square"
+      : ratio === "16/9"
+      ? "aspect-[16/9]"
+      : ratio === "21/9"
+      ? "aspect-[21/9]"
+      : "aspect-[4/3]";
+  const fit = contain ? "object-contain" : "object-cover";
+  return (
+    <div className={`relative w-full overflow-hidden rounded-xl ${ratioClass} ${className}`}>
+      <img
+        src={src}
+        alt={alt}
+        className={`absolute inset-0 h-full w-full ${fit} object-center ${imgClassName}`}
+        loading={eager ? "eager" : "lazy"}
+      />
+    </div>
+  );
+};
+
+// Impact gallery (using your real images)
 const impactPhotos = [
   {
-    src: "/images/impact/group-boxing.jpg",
+    src: GroupPhoto,
     title: "Group Boxing Class — Unity in Action",
     caption:
       "Youth and adults training side by side in an inclusive, empowering environment open to all ages and backgrounds.",
   },
   {
-    src: "/images/impact/vets-recruits.jpg",
-    title: "Veterans and Recruits Training Together",
-    caption:
-      "Collaboration with the U.S. Armed Forces Career Center in Lake Balboa: recruits prepare physically and mentally while veterans mentor them.",
-  },
-  {
-    src: "/images/impact/women-workout.jpg",
-    title: "Women’s Empowerment Workout",
-    caption:
-      "Confidence, health, and connection through supportive group fitness for women.",
-  },
-  {
-    src: "/images/impact/youth-team.jpg",
+    src: GroupPhoto2,
     title: "Youth Boxing Team",
     caption:
       "Respect, discipline, and resilience—providing a safe space for kids who may not otherwise afford training.",
   },
   {
-    src: "/images/impact/birthday.jpg",
-    title: "Community Birthday Celebration",
-    caption:
-      "We celebrate life events for underserved kids, showing we care beyond the gym.",
-  },
-  {
-    src: "/images/impact/certificates.jpg",
-    title: "Certificates & Recognition Day",
-    caption:
-      "Graduation moments that honor commitment, responsibility, and achievement.",
-  },
-  {
-    src: "/images/impact/coaches-leadership.jpg",
+    src: SergeTshirt,
     title: "Coaches & Leadership Team",
     caption:
       "Passionate trainers and veteran leaders—many volunteers—creating real impact together.",
+  },
+  {
+    src: WheelChair,
+    title: "Adaptive Training & Recovery",
+    caption:
+      "Trauma‑informed, inclusive training that supports people with chronic illnesses and mobility needs.",
+  },
+  {
+    src: PainIntoPower,
+    title: "Transforming Pain into Power",
+    caption:
+      "From hardship to hope—celebrating commitment, responsibility, and achievement in the ring and beyond.",
   },
 ];
 
@@ -61,12 +98,6 @@ export default function Home() {
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
-              {/* Replace with your real logo file */}
-              <img
-                src="/images/logo/ums-logo.svg"
-                alt="United Military Sports logo"
-                className="h-12 w-auto"
-              />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl dark:text-white">
                   United Military Sports
@@ -77,7 +108,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* The one and only donate button */}
+            {/* One Donate button only */}
             <a
               href={STRIPE_DONATE_URL}
               target="_blank"
@@ -88,50 +119,85 @@ export default function Home() {
             </a>
           </div>
         </section>
+<div className="flex items-center gap-6 py-2">
+  <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
+  <img
+    src={Logo}
+    alt="United Military Sports logo"
+    className="h-32 w-auto sm:h-40 md:h-52 lg:h-64 max-w-full select-none"
+    loading="eager"
+    draggable="false"
+  />
+  <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
+</div>
 
-        {/* About Us */}
+
+        {/* About Us (text + uniform images) */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
-          <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
-            About Us
-          </h2>
-          <div className="mt-4 space-y-4 text-gray-700 dark:text-gray-300">
-            <p>
-              United Military Sports is a veteran‑founded nonprofit dedicated to
-              empowering veterans, youth, women, individuals with chronic
-              illnesses, and members of the community through fitness, wellness,
-              and recovery programs.
-            </p>
-            <p>
-              We proudly serve the greater Los Angeles area through partnerships
-              with local gyms, including Showtime Boxing Gym, to provide access
-              to physical training, mental health support, mentorship, and
-              community‑based services.
-            </p>
-            <p>
-              Our leadership team includes Emmanuel Salazar, a Purple Heart
-              recipient and disabled veteran, who serves as our Chief Financial
-              Officer (CFO) and community advocate.
-            </p>
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
+                About Us
+              </h2>
+              <div className="mt-4 space-y-4 text-gray-700 dark:text-gray-300">
+                <p>
+                  United Military Sports is a veteran‑founded nonprofit dedicated
+                  to empowering veterans, youth, women, individuals with chronic
+                  illnesses, and members of the community through fitness, wellness,
+                  and recovery programs.
+                </p>
+                <p>
+                  We proudly serve the greater Los Angeles area through partnerships
+                  with local gyms, including Showtime Boxing Gym, to provide access
+                  to physical training, mental health support, mentorship, and
+                  community‑based services.
+                </p>
+                <p>
+                  Our leadership team includes Emmanuel Salazar, a Purple Heart
+                  recipient and disabled veteran, who serves as our Chief Financial
+                  Officer (CFO) and community advocate.
+                </p>
+              </div>
+            </div>
+
+            {/* Uniform image sizes here too */}
+            <div className="grid gap-3 sm:grid-cols-2">
+              <FramedImage src={GroupPhoto} alt="Inclusive training with youth and veterans" />
+              <FramedImage src={WheelChair} alt="Adaptive training and recovery support" />
+              <FramedImage src={PainIntoPower} alt="Pain into Power — celebrating growth" className="sm:col-span-2" />
+            </div>
           </div>
         </section>
 
-        {/* Mission */}
+        {/* Mission (with uniform supporting photo) */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
-          <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
-            Our Mission
-          </h2>
-          <ul className="mt-4 grid list-disc gap-2 pl-5 text-gray-700 dark:text-gray-300 sm:grid-cols-2">
-            <li>Foster physical and mental resilience</li>
-            <li>Support veterans transitioning to civilian life</li>
-            <li>Empower youth and troubled teens</li>
-            <li>Promote healthy habits and self‑discipline</li>
-            <li>Provide trauma‑informed training and mentorship</li>
-            <li>Reduce isolation for people with chronic illnesses</li>
-            <li>Build stronger, healthier communities</li>
-          </ul>
+          <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+            <div className="md:col-span-2">
+              <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
+                Our Mission
+              </h2>
+              <ul className="mt-4 grid list-disc gap-2 pl-5 text-gray-700 dark:text-gray-300 sm:grid-cols-2">
+                <li>Foster physical and mental resilience</li>
+                <li>Support veterans transitioning to civilian life</li>
+                <li>Empower youth and troubled teens</li>
+                <li>Promote healthy habits and self‑discipline</li>
+                <li>Provide trauma‑informed training and mentorship</li>
+                <li>Reduce isolation for people with chronic illnesses</li>
+                <li>Build stronger, healthier communities</li>
+              </ul>
+            </div>
+            <div className="order-first md:order-last">
+              <FramedImage
+                src={SergeTshirt}
+                alt="Coach and leadership supporting the mission"
+                // If the face is high in the frame, you can nudge focus:
+                // imgClassName="object-[50%_30%]"
+              />
+            </div>
+          </div>
         </section>
 
-        {/* Impact: photos + captions */}
+        {/* Impact gallery (uniform sizes) */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
             Our Impact
@@ -142,20 +208,10 @@ export default function Home() {
                 key={p.title}
                 className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900"
               >
-                <div className="aspect-[16/9] w-full overflow-hidden">
-                  <img
-                    src={p.src}
-                    alt={p.title}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
+                <FramedImage src={p.src} alt={p.title} />
                 <figcaption className="p-4">
-                  <div className="font-medium text-gray-900 dark:text-white">
-                    {p.title}
-                  </div>
-                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                    {p.caption}
-                  </p>
+                  <div className="font-medium text-gray-900 dark:text-white">{p.title}</div>
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{p.caption}</p>
                 </figcaption>
               </figure>
             ))}
@@ -198,7 +254,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Donate or Partner With Us (info only; button is in Front Cover) */}
+        {/* Donate/Partner Info */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
             Donate or Partner With Us
@@ -206,13 +262,11 @@ export default function Home() {
 
           <div className="mt-4 space-y-3 text-gray-700 dark:text-gray-300">
             <p>
-              We are currently seeking <span className="font-medium">$10,000+</span> in
-              donations to sustain and expand our services.
+              We are currently seeking <span className="font-medium">$10,000+</span> in donations to sustain and
+              expand our services.
             </p>
             <div>
-              <h3 className="text-base font-medium text-gray-900 dark:text-white">
-                Ways to Donate:
-              </h3>
+              <h3 className="text-base font-medium text-gray-900 dark:text-white">Ways to Donate:</h3>
               <ul className="mt-2 list-disc pl-5 space-y-1">
                 <li>One‑time or monthly contribution</li>
                 <li>In‑kind equipment or gear</li>
@@ -230,8 +284,12 @@ export default function Home() {
           </h2>
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <div className="text-gray-700 dark:text-gray-300">
-              <p>Email: <span className="font-medium">unitedmilitarysports@gmail.com</span></p>
-              <p>Phone: <span className="font-medium">(323) 536‑6771</span></p>
+              <p>
+                Email: <span className="font-medium">unitedmilitarysports@gmail.com</span>
+              </p>
+              <p>
+                Phone: <span className="font-medium">(323) 536‑6771</span>
+              </p>
               <p>Website coming soon!</p>
             </div>
             <div className="text-gray-700 dark:text-gray-300">
