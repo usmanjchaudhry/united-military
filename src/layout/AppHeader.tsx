@@ -11,7 +11,7 @@ const AppHeader: React.FC = () => {
           to="/"
           className="text-base md:text-lg font-semibold tracking-wide text-gray-900 dark:text-white"
         >
-          United Millitary
+          United Millitary Sports
         </Link>
 
         {/* Right: Color switcher */}

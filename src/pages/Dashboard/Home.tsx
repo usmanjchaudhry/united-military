@@ -2,26 +2,27 @@
 import PageMeta from "../../components/common/PageMeta";
 
 // Imported assets (from /public/images)
-import Logo from "../../../public/images/Logo.jpg";
+import Logo2 from "../../../public/images/Logo2.jpg";
 import GroupPhoto from "../../../public/images/groupPhoto.jpg";
 import GroupPhoto2 from "../../../public/images/groupPhoto2.jpg";
 import SergeTshirt from "../../../public/images/SergeTshirt.jpg";
 import WheelChair from "../../../public/images/wheelChair.jpg";
-import PainIntoPower from "../../../public/images/painIntoPower.jpg";
 
-const STRIPE_DONATE_URL = "https://your-stripe-checkout-link"; // ← paste your Stripe link
+// Stripe Payment Link — donors choose the amount on Stripe
+const STRIPE_DONATE_URL = "https://buy.stripe.com/dRm9AU2O81YUcRYfHc2VG00";
 
 // --- Helper to normalize image size ---
 type ImageRatio = "square" | "4/3" | "16/9" | "21/9";
-const FramedImage: React.FC<{
+type FramedImageProps = {
   src: string;
   alt: string;
-  ratio?: ImageRatio;       // default 4:3 across the site
-  contain?: boolean;        // set true if you prefer letterboxing instead of cropping
+  ratio?: ImageRatio;    // default 4:3 across the site
+  contain?: boolean;     // true = show full image (letterbox as needed)
   className?: string;
-  imgClassName?: string;    // optional per-image object-position adjustments
+  imgClassName?: string; // optional per-image object-position adjustments
   eager?: boolean;
-}> = ({
+};
+const FramedImage = ({
   src,
   alt,
   ratio = "4/3",
@@ -29,7 +30,7 @@ const FramedImage: React.FC<{
   className = "",
   imgClassName = "",
   eager = false,
-}) => {
+}: FramedImageProps) => {
   const ratioClass =
     ratio === "square"
       ? "aspect-square"
@@ -51,7 +52,7 @@ const FramedImage: React.FC<{
   );
 };
 
-// Impact gallery (using your real images)
+// Impact gallery
 const impactPhotos = [
   {
     src: GroupPhoto,
@@ -66,22 +67,10 @@ const impactPhotos = [
       "Respect, discipline, and resilience—providing a safe space for kids who may not otherwise afford training.",
   },
   {
-    src: SergeTshirt,
-    title: "Coaches & Leadership Team",
-    caption:
-      "Passionate trainers and veteran leaders—many volunteers—creating real impact together.",
-  },
-  {
     src: WheelChair,
     title: "Adaptive Training & Recovery",
     caption:
       "Trauma‑informed, inclusive training that supports people with chronic illnesses and mobility needs.",
-  },
-  {
-    src: PainIntoPower,
-    title: "Transforming Pain into Power",
-    caption:
-      "From hardship to hope—celebrating commitment, responsibility, and achievement in the ring and beyond.",
   },
 ];
 
@@ -97,42 +86,38 @@ export default function Home() {
         {/* Front Cover */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-4">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl dark:text-white">
-                  United Military Sports
-                </h1>
-                <p className="mt-1 text-sm italic text-gray-600 dark:text-gray-300">
-                  “United Military For Healthier Tomorrow”
-                </p>
-              </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl dark:text-white">
+                United Military Sports
+              </h1>
+              <p className="mt-1 text-sm italic text-gray-600 dark:text-gray-300">
+                “United Military For Healthier Tomorrow”
+              </p>
             </div>
 
-            {/* One Donate button only */}
+            {/* One Donate button only (Stripe Payment Link) */}
             <a
               href={STRIPE_DONATE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-hidden focus-visible:ring ring-indigo-500/30"
+              aria-label="Donate via Stripe (opens in a new tab)"
+className="inline-flex items-center rounded-lg bg-rose-600 px-5 py-3 text-sm font-medium text-white hover:bg-rose-700 focus:outline-hidden focus-visible:ring-2 ring-rose-500/30 transition-colors"
             >
               Donate
             </a>
           </div>
         </section>
-<div className="flex items-center gap-6 py-2">
-  <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
-  <img
-    src={Logo}
-    alt="United Military Sports logo"
-    className="h-32 w-auto sm:h-40 md:h-52 lg:h-64 max-w-full select-none"
-    loading="eager"
-    draggable="false"
-  />
-  <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
-</div>
 
+        {/* Logo only (no wrappers; full image shown, no crop) */}
+        <img
+          src={Logo2}
+          alt="United Military Sports logo"
+          className="block mx-auto w-[clamp(20rem,45vw,48rem)] max-w-full h-auto select-none"
+          loading="eager"
+          draggable="false"
+        />
 
-        {/* About Us (text + uniform images) */}
+        {/* About Us (text + single image) */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <div className="grid gap-6 md:grid-cols-2 md:gap-8">
             <div>
@@ -141,35 +126,39 @@ export default function Home() {
               </h2>
               <div className="mt-4 space-y-4 text-gray-700 dark:text-gray-300">
                 <p>
-                  United Military Sports is a veteran‑founded nonprofit dedicated
-                  to empowering veterans, youth, women, individuals with chronic
-                  illnesses, and members of the community through fitness, wellness,
-                  and recovery programs.
+                  United Military Sports is a veteran‑founded nonprofit dedicated to empowering
+                  veterans, youth, women, individuals with chronic illnesses, and members of the
+                  community through fitness, wellness, and recovery programs.
                 </p>
                 <p>
-                  We proudly serve the greater Los Angeles area through partnerships
-                  with local gyms, including Showtime Boxing Gym, to provide access
-                  to physical training, mental health support, mentorship, and
-                  community‑based services.
+                  We proudly serve the greater Los Angeles area through partnerships with local gyms,
+                  including Showtime Boxing Gym, to provide access to physical training, mental health
+                  support, mentorship, and community‑based services.
                 </p>
                 <p>
-                  Our leadership team includes Emmanuel Salazar, a Purple Heart
-                  recipient and disabled veteran, who serves as our Chief Financial
-                  Officer (CFO) and community advocate.
+                  Our leadership team includes Emmanuel Salazar, a Purple Heart recipient and disabled
+                  veteran, who serves as our Chief Financial Officer (CFO) and community advocate.
                 </p>
               </div>
             </div>
 
-            {/* Uniform image sizes here too */}
-            <div className="grid gap-3 sm:grid-cols-2">
-              <FramedImage src={GroupPhoto} alt="Inclusive training with youth and veterans" />
-              <FramedImage src={WheelChair} alt="Adaptive training and recovery support" />
-              <FramedImage src={PainIntoPower} alt="Pain into Power — celebrating growth" className="sm:col-span-2" />
+            {/* Single image beside the text.
+               Use contain to show full photo if needed; switch to cover for edge-to-edge. */}
+            <div className="md:self-center">
+              <FramedImage
+                src={GroupPhoto}
+                alt="Inclusive training with youth and veterans"
+                className="aspect-[4/3] sm:aspect-[3/2] lg:aspect-[16/10] xl:aspect-[16/9]"
+                // For no cropping, uncomment the next line:
+                // contain
+                // To reframe the crop (when using cover), tweak the focal point:
+                // imgClassName="object-[50%_35%]"
+              />
             </div>
           </div>
         </section>
 
-        {/* Mission (with uniform supporting photo) */}
+        {/* Mission (with supporting photo) */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <div className="grid gap-6 md:grid-cols-3 md:gap-8">
             <div className="md:col-span-2">
@@ -190,14 +179,14 @@ export default function Home() {
               <FramedImage
                 src={SergeTshirt}
                 alt="Coach and leadership supporting the mission"
-                // If the face is high in the frame, you can nudge focus:
+                // If the subject is high in frame, nudge focus:
                 // imgClassName="object-[50%_30%]"
               />
             </div>
           </div>
         </section>
 
-        {/* Impact gallery (uniform sizes) */}
+        {/* Our Impact */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
           <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
             Our Impact
@@ -262,8 +251,8 @@ export default function Home() {
 
           <div className="mt-4 space-y-3 text-gray-700 dark:text-gray-300">
             <p>
-              We are currently seeking <span className="font-medium">$10,000+</span> in donations to sustain and
-              expand our services.
+              We are currently seeking <span className="font-medium">$10,000+</span> in donations to
+              sustain and expand our services.
             </p>
             <div>
               <h3 className="text-base font-medium text-gray-900 dark:text-white">Ways to Donate:</h3>
@@ -279,9 +268,7 @@ export default function Home() {
 
         {/* Contact */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
-          <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">
-            Contact Us
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-900 md:text-2xl dark:text-white">Contact Us</h2>
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <div className="text-gray-700 dark:text-gray-300">
               <p>
